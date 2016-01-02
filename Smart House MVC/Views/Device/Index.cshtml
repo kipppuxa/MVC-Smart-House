@@ -1,0 +1,270 @@
+﻿@using Smart_House_MVC.Models.Devices;
+@using Smart_House_MVC.Models.Enums;
+@using Smart_House_MVC.Models.Interfaces;
+
+@model IDictionary<int, Device>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/Content/CSS/bootstrap.css")
+    @Styles.Render("~/Content/CSS/style.css")
+</head>
+<body>
+    <div class="logo"></div>
+
+    @using (Html.BeginForm("AddDevice", "Device", FormMethod.Post, new { @class = "btn-group-vertical" }))
+    {
+        <input type="submit" name="submitButton" class="btn btn-primary btn-lg" value="Add Lamp" />
+        <input type="submit" name="submitButton" class="btn btn-primary btn-lg" value="Add Heater" />
+        <input type="submit" name="submitButton" class="btn btn-primary btn-lg" value="Add TV" />
+        <input type="submit" name="submitButton" class="btn btn-primary btn-lg" value="Add Wi-Fi" />
+    }
+
+    <div class="wrapper">
+        @foreach (var item in Model)
+        {
+            <div class="device-div-img">
+
+                @if (item.Value is ISwitchable)
+                {
+                    if (item.Value is Lamp)
+                    {
+                        if (item.Value.State)
+                        {
+                            if (((IBrightable)item.Value).Brightness == BrightnessLevel.Low)
+                            {
+                                <img src="~/Content/Images/Lamp/lampOn.png" />
+                            }
+                            else if (((IBrightable)item.Value).Brightness == BrightnessLevel.Medium)
+                            {
+                                <img src="~/Content/Images/Lamp/lampOnMed.png" />
+                            }
+                            else if (((IBrightable)item.Value).Brightness == BrightnessLevel.High)
+                            {
+                                <img src="~/Content/Images/Lamp/lampOnHigh.png" />
+                            }
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOffButton()
+                            }
+
+                            using (Html.BeginForm("SwitchStatePlus/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateSwitchStatePlus()
+                            }
+
+                            using (Html.BeginForm("SwitchStateMinus/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateSwitchStateMinus()
+                            }
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/Lamp/lampOff.png" />
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOnButton()
+                            }
+                        }
+
+                        using (Html.BeginForm("DelDevice/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                        {
+                            @CreateDeleteButton()
+                        }
+                    }
+                    else if (item.Value is Heater)
+                    {
+                        if (item.Value.State)
+                        {
+                            if (((IHeatable)item.Value).Heat == HeatLevel.Low)
+                            {
+                                <img src="~/Content/Images/Heater/heatLow.png" />
+                            }
+                            else if (((IHeatable)item.Value).Heat == HeatLevel.Medium)
+                            {
+                                <img src="~/Content/Images/Heater/heatMed.png" />
+                            }
+                            else if (((IHeatable)item.Value).Heat == HeatLevel.High)
+                            {
+                                <img src="~/Content/Images/Heater/heatHigh.png" />
+                            }
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOffButton()
+                            }
+
+                            using (Html.BeginForm("SwitchStatePlus/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateSwitchStatePlus()
+                            }
+
+                            using (Html.BeginForm("SwitchStateMinus/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateSwitchStateMinus()
+                            }
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/Heater/heatOff.png" />
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOnButton()
+                            }
+                        }
+
+                        using (Html.BeginForm("DelDevice/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                        {
+                            @CreateDeleteButton()
+                        }
+                    }
+                    else if (item.Value is WiFi)
+                    {
+                        if (item.Value.State)
+                        {
+                            <img src="~/Content/Images/WiFi/wifiOn.png" />
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOffButton()
+                            }
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/WiFi/wifiOff.png" />
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOnButton()
+                            }
+                        }
+
+                        using (Html.BeginForm("DelDevice/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                        {
+                            @CreateDeleteButton()
+                        }
+                    }
+                    else if (item.Value is TV)
+                    {
+                        if (item.Value.State)
+                        {
+                            if (((IChannelable)item.Value).Channel == ChannelNumber.BBC)
+                            {
+                                <img src="~/Content/Images/TV/tvBbc.png" />
+                            }
+                            else if (((IChannelable)item.Value).Channel == ChannelNumber.Discovery)
+                            {
+                                <img src="~/Content/Images/TV/tvDiscovery.png" />
+                            }
+                            else if (((IChannelable)item.Value).Channel == ChannelNumber.MTV)
+                            {
+                                <img src="~/Content/Images/TV/tvMtv.png" />
+                            }
+                            else if (((IChannelable)item.Value).Channel == ChannelNumber.NatGeo)
+                            {
+                                <img src="~/Content/Images/TV/tvNatgeo.png" />
+                            }
+
+                            if (((TV)item.Value).StereoVolume == 3)
+                            {
+                                <img src="~/Content/Images/TV/VolumeMax.png" />
+                            }
+                            else if (((TV)item.Value).StereoVolume == 2)
+                            {
+                                <img src="~/Content/Images/TV/VolumeMed.png" />
+                            }
+                            else if (((TV)item.Value).StereoVolume == 1)
+                            {
+                                <img src="~/Content/Images/TV/VolumeMin.png" />
+                            }
+                            else
+                            {
+                                <img src="~/Content/Images/TV/VolumeNone.png" />
+                            }
+
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOffButton()
+                            }
+
+                            using (Html.BeginForm("SwitchStatePlus/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateSwitchStatePlus()
+                            }
+
+                            using (Html.BeginForm("SwitchStateMinus/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateSwitchStateMinus()
+                            }
+
+                            using (Html.BeginForm("SwitchPlusSound/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreatePlusSound()
+                            }
+
+                            using (Html.BeginForm("SwitchMinusSound/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateMinusSound()
+                            }
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/TV/tvOff.png" />
+
+                            using (Html.BeginForm("SwitchOnOff/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                            {
+                                @CreateOnButton()
+                            }
+                        }
+                        using (Html.BeginForm("DelDevice/" + item.Key, "Device", FormMethod.Post, new { @class = "device-div-btn" }))
+                        {
+                            @CreateDeleteButton()
+                        }
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    @helper CreateOffButton()
+{
+    <input type="image" src="~/Content/Images/onOffUpDown/off.png" />
+}
+
+    @helper CreateOnButton()
+{
+    <input type="image" src="~/Content/Images/onOffUpDown/on.png" />
+}
+
+    @helper CreateSwitchStatePlus()
+{
+    <input type="image" src="~/Content/Images/onOffUpDown/Up.png" />
+}
+
+    @helper CreateSwitchStateMinus()
+{
+    <input type="image" src="~/Content/Images/onOffUpDown/Down.png" />
+}
+
+    @helper CreateDeleteButton()
+{
+    <input type="image" src="~/Content/Images/onOffUpDown/close.png" />
+}
+
+    @helper CreatePlusSound()
+{
+    <input type="image" src="~/Content/Images/onOffUpDown/Plus.png" />
+}
+
+    @helper CreateMinusSound()
+{
+    <input type="image" src="~/Content/Images/onOffUpDown/Minus.png" />
+}
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+.device-div-img {
+	border-radius: 20px;
+	display: inline-block;
+	margin: 3px;
+	padding: 4px;
+	background-color: #D2D2D2;
+	}
+
+.device-div-btn {
+	display: inline-block;
+	margin: 1px;
+	padding: 1px;
+	}
+
+form input{
+    margin: initial;
+    padding:initial;
+}
+	
+body {
+	background-image:url(fabric.png);
+	background-repeat:  repeat-y repeat-x;
+	}
+	
+.logo {
+	background-image: url(logo.png);
+	background-repeat: no-repeat;
+	background-position: 50%;
+	padding:55px;
+	}
+	
+.wrapper{
+	width:900px;
+	position:center;
+	margin:1% 0 0 20%;
+	padding: 20px;
+}
+
+img{
+	vertical-align:bottom;
+}
+	
